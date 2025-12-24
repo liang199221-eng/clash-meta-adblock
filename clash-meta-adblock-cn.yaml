@@ -1,7 +1,6 @@
 # =========================
 # Clash Meta 安卓 · 纯广告过滤规则
-# 作者：liang199
-# 用途：不翻墙 / 不用节点 / 只拦广告
+# 用途：仅过滤广告 / 所有流量直连 / 无代理节点
 # =========================
 
 mixed-port: 7890
@@ -9,20 +8,24 @@ allow-lan: false
 mode: rule
 log-level: warning
 
-# ===== 必须添加以下部分来骗过系统检查 =====
+# 修正部分：添加一个具体的 Shadowsocks 假节点来满足格式要求
 proxies:
   - name: "仅拦截广告-不具备翻墙功能"
-    type: select
-    proxies:
-      - DIRECT
+    type: ss
+    server: 127.0.0.1
+    port: 8388
+    cipher: aes-128-gcm
+    password: "password"
 
+# 策略组：让所有非广告流量强制走直连
 proxy-groups:
-  - name: "广告拦截状态"
+  - name: "流量出口"
     type: select
     proxies:
       - DIRECT
+      - "仅拦截广告-不具备翻墙功能"
 
-# ===== DNS =====
+# DNS 配置
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -35,7 +38,7 @@ dns:
   nameserver:
     - https://dns.alidns.com/dns-query
 
-# ===== 广告规则集 =====
+# 广告规则集
 rule-providers:
   ads_core:
     type: http
@@ -44,9 +47,9 @@ rule-providers:
     path: ./ruleset/ads_core.yaml
     interval: 86400
 
-# ===== 规则逻辑 =====
+# 规则逻辑
 rules:
-  # 拦截广告
+  # 1. 拦截广告集
   - RULE-SET,ads_core,REJECT
-  # 其余全部直连
+  # 2. 兜底全部直连（不走 VPN）
   - MATCH,DIRECT
