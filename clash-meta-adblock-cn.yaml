@@ -1,14 +1,28 @@
-# ==============================
+# =========================
 # Clash Meta 安卓 · 纯广告过滤规则
 # 作者：liang199
 # 用途：不翻墙 / 不用节点 / 只拦广告
-# ==============================
+# =========================
 
 mixed-port: 7890
 allow-lan: false
 mode: rule
 log-level: warning
 
+# ===== 必须添加以下部分来骗过系统检查 =====
+proxies:
+  - name: "仅拦截广告-不具备翻墙功能"
+    type: select
+    proxies:
+      - DIRECT
+
+proxy-groups:
+  - name: "广告拦截状态"
+    type: select
+    proxies:
+      - DIRECT
+
+# ===== DNS =====
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -18,68 +32,21 @@ dns:
   use-hosts: true
   default-nameserver:
     - 223.5.5.5
-    - 119.29.29.29
   nameserver:
     - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-  fake-ip-filter:
-    - "*.lan"
-    - "*.local"
-    - "time.*"
-    - "ntp.*"
 
+# ===== 广告规则集 =====
 rule-providers:
   ads_core:
     type: http
     behavior: domain
-    url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-clash.yaml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-clash.yaml
     path: ./ruleset/ads_core.yaml
     interval: 86400
 
-  ads_plus:
-    type: http
-    behavior: domain
-    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list
-    path: ./ruleset/ads_plus.yaml
-    interval: 86400
-
-  ads_mobile:
-    type: http
-    behavior: domain
-    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Advertising/Advertising.list
-    path: ./ruleset/ads_mobile.yaml
-    interval: 86400
-
-  cn_ads_core:
-    type: http
-    behavior: domain
-    url: https://raw.githubusercontent.com/Cats-Team/AdRules/main/clash.yaml
-    path: ./ruleset/cn_ads_core.yaml
-    interval: 86400
-
+# ===== 规则逻辑 =====
 rules:
-  # 抖音广告
-  - DOMAIN-SUFFIX,ad.snssdk.com,REJECT
-  - DOMAIN-SUFFIX,ads.snssdk.com,REJECT
-  - DOMAIN-SUFFIX,ads.bytedance.com,REJECT
-  - DOMAIN-SUFFIX,log.snssdk.com,REJECT
-  - DOMAIN-SUFFIX,mon.snssdk.com,REJECT
-  - DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
-  - DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
-
-  # 腾讯广告
-  - DOMAIN-SUFFIX,adsmind.tencent.com,REJECT
-  - DOMAIN-SUFFIX,adsfile.qq.com,REJECT
-  - DOMAIN-SUFFIX,adsrich.qq.com,REJECT
-  - DOMAIN-SUFFIX,pgdt.qq.com,REJECT
-  - DOMAIN-SUFFIX,gdt.qq.com,REJECT
-  - DOMAIN-SUFFIX,e.qq.com,REJECT
-
-  # 国产 + 通用广告
-  - RULE-SET,cn_ads_core,REJECT
+  # 拦截广告
   - RULE-SET,ads_core,REJECT
-  - RULE-SET,ads_plus,REJECT
-  - RULE-SET,ads_mobile,REJECT
-
-  # 其他全部直连
+  # 其余全部直连
   - MATCH,DIRECT
