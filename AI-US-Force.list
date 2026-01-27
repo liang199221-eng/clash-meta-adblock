@@ -1,22 +1,37 @@
-DOMAIN-SUFFIX,openai.com
-DOMAIN-SUFFIX,chatgpt.com
-DOMAIN-SUFFIX,oaiusercontent.com
-DOMAIN-SUFFIX,oaistatic.com
-DOMAIN-SUFFIX,openai.azure.com
+# ===============================
+# Shadowrocket | US-AI ACL4SSR
+# ===============================
 
-DOMAIN-SUFFIX,google.com
-DOMAIN-SUFFIX,googleapis.com
-DOMAIN-SUFFIX,gstatic.com
-DOMAIN-SUFFIX,ai.google.dev
-DOMAIN-SUFFIX,generativelanguage.googleapis.com
+# --- Ad Block ---
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BanAD.list,REJECT
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BanProgramAD.list,REJECT
 
-DOMAIN-SUFFIX,facebook.com
-DOMAIN-SUFFIX,fbcdn.net
-DOMAIN-SUFFIX,meta.com
-DOMAIN-SUFFIX,instagram.com
+# --- AI / Google / Microsoft -> US ---
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/OpenAI.list,US-ONLY
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Google.list,US-ONLY
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Microsoft.list,US-ONLY
 
-DOMAIN-SUFFIX,microsoft.com
-DOMAIN-SUFFIX,azure.com
-DOMAIN-SUFFIX,live.com
-DOMAIN-SUFFIX,office.com
-DOMAIN-SUFFIX,bing.com
+# --- Meta / YouTube -> US ---
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Facebook.list,US-ONLY
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/YouTube.list,US-ONLY
+
+# --- Manual Rules ---
+DOMAIN,www.bing.com,US-ONLY
+DOMAIN,sydney.bing.com,US-ONLY
+DOMAIN,edgeservices.bing.com,US-ONLY
+DOMAIN,cn.bing.com,US-ONLY
+DOMAIN-SUFFIX,bing.net,US-ONLY
+DOMAIN-SUFFIX,mm.bing.net,US-ONLY
+DOMAIN-SUFFIX,th.bing.com,US-ONLY
+DOMAIN-KEYWORD,gemini,US-ONLY
+DOMAIN-SUFFIX,copilot.microsoft.com,US-ONLY
+
+# --- China Direct ---
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/China.list,DIRECT
+
+# --- Global Proxy ---
+RULE-SET,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ProxyGFWlist.list,PROXY
+
+# --- Final ---
+GEOIP,CN,DIRECT
+FINAL,PROXY
